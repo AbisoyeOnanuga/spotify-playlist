@@ -45,9 +45,9 @@ function onPageLoad() {
     localStorage.setItem("spotify_auth_state", state);
 
     // Get the environment variables
-    const SPOTIFY_CLIENT_ID = "process.env.SPOTIFY_CLIENT_ID";
-    const SPOTIFY_REDIRECT_URI = "process.env.SPOTIFY_REDIRECT_URI";
-    const SPOTIFY_SCOPE = "process.env.SPOTIFY_SCOPE";
+    const SPOTIFY_CLIENT_ID = "07cf532190044f808358e604406e2bee";
+    const SPOTIFY_REDIRECT_URI = "http://localhost:5000/callback.html";
+    const SPOTIFY_SCOPE = "user-library-read user-top-read playlist-modify-public user-read-email user-read-private";
 
     // Redirect the user to the Spotify authorization endpoint
     window.location = "https://accounts.spotify.com/authorize" +
