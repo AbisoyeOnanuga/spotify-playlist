@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Callback</title>
+    <script>
+      // Get the state value from the URL query
+      let state = window.location.search
+        .substring(1)
+        .split('&')
+        .reduce(function (initial, item) {
+          if (item) {
+            var parts = item.split('=');
+            initial[parts[0]] = decodeURIComponent(parts[1]);
+          }
+          return initial;
+        }, {}).state;
+
+      // Get the state value from the local storage
+      let storedState = localStorage.getItem('spotify_auth_state');
+
+      // Compare the state values and redirect to the index page if they match
+      if (state && state === storedState) {
+        window.location = '/';
+      } else {
+        // Otherwise, display an error message
+        document.getElementById('error').textContent =
+          'Invalid state parameter. Please try again.';
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Callback</h1>
+    <p id="error"></p>
+  </body>
+</html>
