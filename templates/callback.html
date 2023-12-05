@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Callback</title>
-    <script>
-      // Get the state value from the URL query
+    <script src="{{ url_for('static', filename='../static/js/index.js') }}">
+    // Get the state value from the URL query
       let state = window.location.search
         .substring(1)
         .split('&')
