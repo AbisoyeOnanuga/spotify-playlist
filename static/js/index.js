@@ -28,6 +28,8 @@ const playlistContainer = document.getElementById("playlist-container"); // The 
 playlistLink = document.getElementById("playlist-link"); // The playlist link element
 const progress = document.getElementById("progress"); // The progress element
 
+return playlistContainer
+
 // Define the event listeners
 loginButton.addEventListener("click", () => {
   // Redirect to the authorization url when the login button is clicked
