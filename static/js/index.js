@@ -82,6 +82,26 @@ function displayUserProfile() {
   userProfileContainer.style.display = "block";
 }
 
+function getUserTopTracks() {
+  // Get the user's top tracks from Spotify
+  fetch(`${API_URL}/me/top/tracks?limit=5`, {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Save the user's top tracks
+    topTracks = data.items;
+    // Display the user's top tracks
+    displayUserTopTracks();
+  })
+  .catch(error => {
+    // Handle the error
+    console.error(error);
+  });
+}
+
 function displayTopTracks() {
   // Display the user's top tracks from Spotify
   // Fetch the user's top tracks from Spotify API
