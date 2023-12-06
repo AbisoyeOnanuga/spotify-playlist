@@ -336,8 +336,8 @@ function displayPlaylistTracks() {
   playlistContainer.appendChild(list);
 }
 
-// Define the generatePlaylist function
-function generatePlaylist() {
+// Define the main function
+function main() {
   // Get the hash parameters from the url
   let hashParams = getHashParams();
   // Check if the access token is present
@@ -373,8 +373,21 @@ function generatePlaylist() {
   }
 }
 
+// Define the generatePlaylist function
+function generatePlaylist() {
+  // Get the selected activity from the select box
+  let activity = activitySelect.value;
+  // Get the selected number of songs from the slider
+  let length = lengthSlider.value;
+  // Generate the playlist based on the activity and length
+  // Your code to generate the playlist
+}
+
+// Create a button to generate the playlist
+let generateButton = createButton("Generate Playlist");
+
 // Add a click event listener to the button element
-generateButton.addEventListener("click", generatePlaylist);
+generateButton.addEventListener("click", generatePlaylist());
 
 // Define the criteria dictionary for each activity
 let criteriaDict = {
