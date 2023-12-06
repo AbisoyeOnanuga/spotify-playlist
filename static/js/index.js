@@ -84,7 +84,7 @@ function displayUserProfile() {
 
 function getUserTopTracks() {
   // Get the user's top tracks from Spotify
-  fetch(`${API_URL}/me/top/tracks`, {
+  fetch(`${API_URL}/me/top/tracks?limit=5`, {
     headers: {
       "Authorization": `Bearer ${accessToken}`
     }
