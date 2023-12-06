@@ -33,11 +33,6 @@ loginButton.addEventListener("click", () => {
   window.location = AUTH_URL;
 });
 
-playlistButton.addEventListener("click", () => {
-  // Generate the playlist when the playlist button is clicked
-  generatePlaylist();
-});
-
 // Define the helper functions
 function getHashParams() {
   // Get the hash parameters from the url
