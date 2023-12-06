@@ -21,7 +21,7 @@ const avatar = document.getElementById("avatar"); // The avatar image element
 const displayName = document.getElementById("displayName"); // The display name span element
 const id = document.getElementById("id"); // The id span element
 const topTracksContainer = document.getElementById("top-tracks-container"); // The top tracks container element
-const playlistButton = document.getElementById("playlist-button"); // The playlist button element
+const playlistButton = document.getElementById("generate-button"); // The playlist button element
 const playlistContainer = document.getElementById("playlist-container"); // The playlist container element
 // Remove the let keyword from the playlistLink variable
 playlistLink = document.getElementById("playlist-link"); // The playlist link element
