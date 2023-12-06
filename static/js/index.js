@@ -6,6 +6,8 @@ let playlistItems; // The playlist items based on the activity and criteria
 let playlistId; // The playlist id for the new playlist
 let playlistName; // The playlist name for the new playlist
 let playlistLink; // The playlist link for the new playlist
+// Create a button to generate the playlist
+let generateButton = createButton("Generate Playlist");
 
 // Define the constants
 const CLIENT_ID = "07cf532190044f808358e604406e2bee"; // The client id for your Spotify app
@@ -380,9 +382,6 @@ function generatePlaylist() {
   // Generate the playlist based on the activity and length
   // Your code to generate the playlist
 }
-
-// Create a button to generate the playlist
-let generateButton = createButton("Generate Playlist");
 
 // Add a click event listener to the button element
 generateButton.addEventListener("click", generatePlaylist());
