@@ -1,2 +1,6 @@
 .env.local
 /__pycache__
+auth.js
+index copy.js
+playlist.js
+profile.js

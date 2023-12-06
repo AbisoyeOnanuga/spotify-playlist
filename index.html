@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kora</title>
+    <!-- Load custom CSS file -->
+    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+    <!-- Link a favicon image -->
+    <link rel="icon" type="image/png" href="static/images/favicon/favicon.ico" alt="Kora logo" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+  </head>
+  <body>
+    <h1>Kora</h1>
+    <h2>Welcome to Kora, a Next.js app with Spotify!</h2>
+    <button id="login-button">Login with Spotify</button>
+    <!-- Add a div element to wrap the user profile data -->
+    <div id="user-profile" style="display: none;">
+      <div class="container">
+        <h1>Spotify Profile</h1>
+        <div class="profile">
+            <img id="avatar" src="" alt="Avatar">
+            <div class="info">
+                <p><strong>Name:</strong> <span id="displayName"></span></p>
+                <p><strong>ID:</strong> <span id="id"></span></p>
+                <p><strong>Email:</strong> <span id="email"></span></p>
+                <p><strong>URI:</strong> <a id="uri" href=""></a></p>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div id="top-tracks-container"></div>
+    <div id="playlist-button"></div>
+    <div id="playlist-container"></div>
+    <div id="playlist-link"></div>
+    <div id="progress"></div>
+    <script src="static/js/index.js"></script>
+  </body>
+</html>

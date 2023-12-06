@@ -1,419 +1,503 @@
-// Define a function to run when the page loads
-function onPageLoad() {
-  // Get the elements from the HTML file
-  const loginButton = document.getElementById("login-button");
-  const profileContainer = document.getElementById("profile-container");
-  const profileImage = document.getElementById("profile-image");
-  const profileName = document.getElementById("profile-name");
-  const profileEmail = document.getElementById("profile-email");
-  const topTracksContainer = document.getElementById("top-tracks-container");
-  const playlistButton = document.getElementById("playlist-button");
-  const playlistContainer = document.getElementById("playlist-container");
-  const playlistLink = document.getElementById("playlist-link");
+// Define the global variables
+let accessToken; // The access token for Spotify API
+let userProfile; // The user profile data from Spotify
+let topTracks; // The user's top tracks from Spotify
+let playlistItems; // The playlist items based on the activity and criteria
+let playlistId; // The playlist id for the new playlist
+let playlistName; // The playlist name for the new playlist
+let playlistLink; // The playlist link for the new playlist
 
-  // Define the Spotify API endpoints
-  const SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1";
-  const SPOTIFY_ME_ENDPOINT = `${SPOTIFY_API_BASE_URL}/me`;
-  const SPOTIFY_TOP_TRACKS_ENDPOINT = `${SPOTIFY_API_BASE_URL}/me/top/tracks`;
-  const SPOTIFY_CREATE_PLAYLIST_ENDPOINT = `${SPOTIFY_API_BASE_URL}/users/{user_id}/playlists`;
-  const SPOTIFY_ADD_TRACKS_ENDPOINT = `${SPOTIFY_API_BASE_URL}/playlists/{playlist_id}/tracks`;
+// Define the constants
+const CLIENT_ID = "07cf532190044f808358e604406e2bee"; // The client id for your Spotify app
+const REDIRECT_URI = "http://localhost"; // The redirect uri for your Spotify app
+const SCOPES = "user-read-private user-read-email user-top-read playlist-modify-public"; // The scopes for Spotify authorization
+const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}`; // The authorization url for Spotify
+const API_URL = "https://api.spotify.com/v1"; // The base url for Spotify API
 
-  // Define a function to generate a random string for the state parameter
-  function generateRandomString(length) {
-    // Define the possible characters
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+// Define the DOM elements
+const loginButton = document.getElementById("login-button"); // The login button element
+const userProfileContainer = document.getElementById("user-profile"); // The user profile container element
+const avatar = document.getElementById("avatar"); // The avatar image element
+const displayName = document.getElementById("displayName"); // The display name span element
+const id = document.getElementById("id"); // The id span element
+const email = document.getElementById("email"); // The email span element
+const uri = document.getElementById("uri"); // The uri anchor element
+const topTracksContainer = document.getElementById("top-tracks-container"); // The top tracks container element
+const playlistButton = document.getElementById("playlist-button"); // The playlist button element
+const playlistContainer = document.getElementById("playlist-container"); // The playlist container element
+// Remove the let keyword from the playlistLink variable
+playlistLink = document.getElementById("playlist-link"); // The playlist link element
+const progress = document.getElementById("progress"); // The progress element
 
-    // Initialize an empty string
-    let result = "";
+// Define the event listeners
+loginButton.addEventListener("click", () => {
+  // Redirect to the authorization url when the login button is clicked
+  window.location = AUTH_URL;
+});
 
-    // Loop through the length
-    for (let i = 0; i < length; i++) {
-      // Append a random character from the possible characters
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+playlistButton.addEventListener("click", () => {
+  // Generate the playlist when the playlist button is clicked
+  generatePlaylist();
+});
 
-    // Return the result
-    return result;
+// Define the helper functions
+function getHashParams() {
+  // Get the hash parameters from the url
+  let hashParams = {};
+  let e, r = /([^&;=]+)=?([^&;]*)/g,
+      q = window.location.hash.substring(1);
+  while ( e = r.exec(q)) {
+     hashParams[e[1]] = decodeURIComponent(e[2]);
   }
-
-  // Define a function to handle the login button click
-  function handleLoginButtonClick() {
-    // Generate a random string for the state parameter
-    const state = generateRandomString(16);
-
-    // Store the state value in the local storage
-    localStorage.setItem("spotify_auth_state", state);
-
-    // Get the environment variables
-    const SPOTIFY_CLIENT_ID = "07cf532190044f808358e604406e2bee";
-    const SPOTIFY_REDIRECT_URI = "http://localhost:5000/callback.html";
-    const SPOTIFY_SCOPE = "user-library-read user-top-read playlist-modify-public user-read-email user-read-private";
-
-    // Redirect the user to the Spotify authorization endpoint
-    window.location = "https://accounts.spotify.com/authorize" +
-      "?response_type=token" +
-      "&client_id=" + encodeURIComponent(SPOTIFY_CLIENT_ID) +
-      "&scope=" + encodeURIComponent(SPOTIFY_SCOPE) +
-      "&redirect_uri=" + encodeURIComponent(SPOTIFY_REDIRECT_URI) +
-      "&state=" + encodeURIComponent(state);
-  }
-
-  // Define a function to handle the page load
-  function handlePageLoad() {
-    // Get the access token from the URL hash
-    const accessToken = getAccessTokenFromUrl();
-
-    // Check if the access token is not null
-    if (accessToken) {
-      // Get the user profile data from the Spotify API
-      getUserProfile(accessToken);
-
-      // Get the user's top tracks from the Spotify API
-      getUserTopTracks(accessToken);
-
-      // Enable the playlist button
-      playlistButton.disabled = false;
-
-      // Add a click event listener to the playlist button
-      playlistButton.addEventListener("click", function () {
-        // Create a playlist with the user's top tracks
-        createPlaylistWithTopTracks(accessToken);
-      });
-    }
-  }
-
-  // Define a function to get the access token from the URL hash
-  function getAccessTokenFromUrl() {
-    // Get the hash part of the URL
-    const hash = window.location.hash;
-
-    // Check if the hash is not empty
-    if (hash) {
-      // Parse the hash into an object
-      const params = new URLSearchParams(hash.substring(1));
-
-      // Get the access token from the object
-      const accessToken = params.get("access_token");
-
-      // Return the access token
-      return accessToken;
-    }
-
-    // Return null if the hash is empty
-    return null;
-  }
-
-  // Define a function to get the user profile data from the Spotify API
-  function getUserProfile(accessToken) {
-    // Create a new XMLHttpRequest object
-    const xhr = new XMLHttpRequest();
-
-    // Set the request method and the endpoint URL
-    xhr.open("GET", SPOTIFY_ME_ENDPOINT);
-
-    // Set the authorization header with the access token
-    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-
-    // Set the response type to JSON
-    xhr.responseType = "json";
-
-    // Define a function to handle the response
-    xhr.onload = function () {
-      // Check if the status code is 200 (OK)
-      if (xhr.status === 200) {
-        // Get the response data
-        const data = xhr.response;
-
-        // Display the user profile data
-        displayUserProfile(data);
-      } else {
-        // Display an error message
-        alert("Something went wrong");
-      }
-    };
-
-    // Send the request
-    xhr.send();
-  }
-
-  // Define a function to display the user profile data
-  function displayUserProfile(data) {
-    // Get the user image, name, and email from the data
-    const image = data.images[0].url;
-    const name = data.display_name;
-    const email = data.email;
-
-    // Set the source, alt, and title attributes of the profile image element
-    profileImage.src = image;
-    profileImage.alt = name;
-    profileImage.title = name;
-
-    // Set the text content of the profile name and email elements
-    profileName.textContent = name;
-    profileEmail.textContent = email;
-
-    // Show the profile container element
-    profileContainer.style.display = "block";
-  }
-
-  // Define a function to get the user's top tracks from the Spotify API
-  function getUserTopTracks(accessToken) {
-    // Create a new XMLHttpRequest object
-    const xhr = new XMLHttpRequest();
-
-    // Set the request method and the endpoint URL
-    xhr.open("GET", SPOTIFY_TOP_TRACKS_ENDPOINT);
-
-    // Set the authorization header with the access token
-    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-
-    // Set the response type to JSON
-    xhr.responseType = "json";
-
-    // Define a function to handle the response
-    xhr.onload = function () {
-      // Check if the status code is 200 (OK)
-      if (xhr.status === 200) {
-        // Get the response data
-        const data = xhr.response;
-
-        // Display the user's top tracks
-        displayUserTopTracks(data);
-      } else {
-        // Display an error message
-        alert("Something went wrong");
-      }
-    };
-
-    // Send the request
-    xhr.send();
-  }
-
-  // Define a function to display the user's top tracks
-  function displayUserTopTracks(data) {
-    // Get the items array from the data
-    const items = data.items;
-
-    // Loop through the items array
-    for (let i = 0; i < items.length; i++) {
-      // Get the track object from the item
-      const track = items[i];
-
-      // Get the track name, artist name, and preview URL from the track object
-      const trackName = track.name;
-      const artistName = track.artists[0].name;
-      const previewUrl = track.preview_url;
-
-      // Create a new div element for the track
-      const trackDiv = document.createElement("div");
-
-      // Set the class name of the track div element
-      trackDiv.className = "track";
-
-      // Set the data attribute of the track div element with the preview URL
-      trackDiv.dataset.previewUrl = previewUrl;
-
-      // Create a new span element for the track name
-      const trackNameSpan = document.createElement("span");
-
-      // Set the class name of the track name span element
-      trackNameSpan.className = "track-name";
-
-      // Set the text content of the track name span element
-      trackNameSpan.textContent = trackName;
-
-      // Append the track name span element to the track div element
-      trackDiv.appendChild(trackNameSpan);
-
-      // Create a new span element for the artist name
-      const artistNameSpan = document.createElement("span");
-
-      // Set the class name of the artist name span element
-      artistNameSpan.className = "artist-name";
-
-      // Set the text content of the artist name span element
-      artistNameSpan.textContent = artistName;
-
-      // Append the artist name span element to the track div element
-      trackDiv.appendChild(artistNameSpan);
-
-      // Append the track div element to the top tracks container element
-      topTracksContainer.appendChild(trackDiv);
-
-      // Add a click event listener to the track div element
-      trackDiv.addEventListener("click", function () {
-        // Play or pause the track preview
-        playOrPauseTrackPreview(this);
-      });
-    }
-
-    // Show the top tracks container element
-    topTracksContainer.style.display = "block";
-  }
-
-  // Define a function to play or pause the track preview
-  function playOrPauseTrackPreview(trackDiv) {
-    // Get the preview URL from the data attribute of the track div element
-    const previewUrl = trackDiv.dataset.previewUrl;
-
-    // Check if the preview URL is not null
-    if (previewUrl) {
-      // Create a new audio element
-      const audio = new Audio(previewUrl);
-
-      // Check if the track div element has the playing class
-      if (trackDiv.classList.contains("playing")) {
-        // Pause the audio
-        audio.pause();
-
-        // Remove the playing class from the track div element
-        trackDiv.classList.remove("playing");
-      } else {
-        // Play the audio
-        audio.play();
-
-        // Add the playing class to the track div element
-        trackDiv.classList.add("playing");
-      }
-    } else {
-      // Display a message that the track preview is not available
-      alert("Track preview is not available");
-    }
-  }
-
-  // Define a function to create a playlist with the user's top tracks
-  function createPlaylistWithTopTracks(accessToken) {
-    // Get the user ID from the profile name element
-    const userId = document.getElementById("profile-name").textContent;
-
-    // Create a new XMLHttpRequest object
-    const xhr = new XMLHttpRequest();
-
-    // Set the request method and the endpoint URL
-    xhr.open("POST", "https://api.spotify.com/v1/users/" + userId + "/playlists");
-
-    // Set the authorization header with the access token
-    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-
-    // Set the content type header to JSON
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    // Set the response type to JSON
-    xhr.responseType = "json";
-
-    // Define a function to handle the response
-    xhr.onload = function () {
-      // Check if the status code is 201 (Created)
-      if (xhr.status === 201) {
-        // Get the response data
-        const data = xhr.response;
-
-        // Get the playlist ID and URL from the data
-        const playlistId = data.id;
-        const playlistUrl = data.external_urls.spotify;
-
-        // Add the user's top tracks to the playlist
-        addUserTopTracksToPlaylist(accessToken, playlistId, playlistUrl);
-      } else {
-        // Display an error message
-        alert("Something went wrong");
-      }
-    };
-
-    // Define the request body with the playlist name and description
-    const requestBody = JSON.stringify({
-      name: "My Top Tracks",
-      description: "A playlist created by Bing with my top tracks from Spotify"
-    });
-
-    // Send the request with the request body
-    xhr.send(requestBody);
-  }
-
-  // Define a function to add the user's top tracks to the playlist
-  function addUserTopTracksToPlaylist(accessToken, playlistId, playlistUrl) {
-    // Get the track div elements from the top tracks container element
-    const trackDivs = document.getElementById("top-tracks-container").getElementsByClassName("track");
-
-    // Initialize an empty array for the track URIs
-    const trackUris = [];
-
-    // Loop through the track div elements
-    for (let i = 0; i < trackDivs.length; i++) {
-      // Get the track div element
-      const trackDiv = trackDivs[i];
-
-      // Get the preview URL from the data attribute of the track div element
-      const previewUrl = trackDiv.dataset.previewUrl;
-
-      // Check if the preview URL is not null
-      if (previewUrl) {
-        // Extract the track ID from the preview URL
-        const trackId = previewUrl.split("/")[4];
-
-        // Construct the track URI from the track ID
-        const trackUri = "spotify:track:" + trackId;
-
-        // Push the track URI to the track URIs array
-        trackUris.push(trackUri);
-      }
-    }
-
-    // Create a new XMLHttpRequest object
-    const xhr = new XMLHttpRequest();
-
-    // Set the request method and the endpoint URL
-    xhr.open("POST", "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks");
-
-    // Set the authorization header with the access token
-    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-
-    // Set the content type header to JSON
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    // Set the response type to JSON
-    xhr.responseType = "json";
-
-    // Define a function to handle the response
-    xhr.onload = function () {
-      // Check if the status code is 201 (Created)
-      if (xhr.status === 201) {
-        // Get the response data
-        const data = xhr.response;
-
-        // Display the playlist link
-        displayPlaylistLink(playlistUrl);
-      } else {
-        // Display an error message
-        alert("Something went wrong");
-      }
-    };
-
-    // Define the request body with the track URIs array
-    const requestBody = JSON.stringify({
-      uris: trackUris
-    });
-
-    // Send the request with the request body
-    xhr.send(requestBody);
-  }
-
-  // Define a function to display the playlist link
-  function displayPlaylistLink(playlistUrl) {
-    // Set the href and text content of the playlist link element
-    document.getElementById("playlist-link").href = playlistUrl;
-    document.getElementById("playlist-link").textContent = playlistUrl;
-
-    // Show the playlist container element
-    document.getElementById("playlist-container").style.display = "block";
-  }
-
-  // Add a click event listener to the login button
-  document.getElementById("login-button").addEventListener("click", handleLoginButtonClick);
-
-    // Call the handle page load function
-    handlePageLoad();
+  return hashParams;
 }
 
-// Call the handle page load function when the page loads
-window.addEventListener("load", onPageLoad);
+function getUserProfile() {
+  // Get the user profile from Spotify
+  fetch(`${API_URL}/me`, {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Save the user profile data
+    userProfile = data;
+    // Display the user profile data
+    displayUserProfile();
+  })
+  .catch(error => {
+    // Handle the error
+    console.error(error);
+  });
+}
+
+function displayUserProfile() {
+  // Display the user profile data
+  // Set the avatar image source
+  avatar.src = userProfile.images[0].url;
+  // Set the display name text
+  displayName.textContent = userProfile.display_name;
+  // Set the id text
+  id.textContent = userProfile.id;
+  // Set the email text
+  email.textContent = userProfile.email;
+  // Set the uri href and text
+  uri.href = userProfile.uri;
+  uri.textContent = userProfile.uri;
+  // Show the user profile container
+  userProfileContainer.style.display = "block";
+}
+
+function getUserTopTracks() {
+  // Get the user's top tracks from Spotify
+  fetch(`${API_URL}/me/top/tracks`, {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Save the user's top tracks
+    topTracks = data.items;
+    // Display the user's top tracks
+    displayUserTopTracks();
+  })
+  .catch(error => {
+    // Handle the error
+    console.error(error);
+  });
+}
+
+function displayUserTopTracks() {
+  // Display the user's top tracks
+  // Create a heading element for the top tracks
+  let heading = document.createElement("h1");
+  heading.textContent = "Your Top Tracks";
+  // Append the heading element to the top tracks container
+  topTracksContainer.appendChild(heading);
+  // Create a list element for the top tracks
+  let list = document.createElement("ul");
+  // Loop through the top tracks
+  for (let track of topTracks) {
+    // Create a list item element for each track
+    let item = document.createElement("li");
+    // Get the track name, artists, and duration
+    let trackName = track.name;
+    let trackArtists = track.artists.map(artist => artist.name).join(", ");
+    let trackDuration = msToMMSS(track.duration_ms);
+    // Set the list item text as formatted string
+    item.textContent = `${trackName} by ${trackArtists} (${trackDuration})`;
+    // Append the list item element to the list element
+    list.appendChild(item);
+  }
+  // Append the list element to the top tracks container
+  topTracksContainer.appendChild(list);
+}
+
+function msToMMSS(ms) {
+  // Convert milliseconds to mm:ss format
+  let minutes = Math.floor(ms / 60000);
+  let seconds = Math.floor((ms % 60000) / 1000);
+  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+}
+
+function createSelectBox(label, options) {
+  // Create a select box element with a label and options
+  // Create a label element for the select box
+  let selectLabel = document.createElement("label");
+  selectLabel.textContent = label;
+  // Create a select element for the select box
+  let select = document.createElement("select");
+  // Loop through the options
+  for (let option of options) {
+    // Create an option element for each option
+    let optionElement = document.createElement("option");
+    optionElement.value = option;
+    optionElement.textContent = option;
+    // Append the option element to the select element
+    select.appendChild(optionElement);
+  }
+  // Append the label element and the select element to the playlist container
+  playlistContainer.appendChild(selectLabel);
+  playlistContainer.appendChild(select);
+  // Return the select element
+  return select;
+}
+
+function createSlider(label, min, max) {
+  // Create a slider element with a label and a range
+  // Create a label element for the slider
+  let sliderLabel = document.createElement("label");
+  sliderLabel.textContent = label;
+  // Create a input element for the slider
+  let slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = min;
+  slider.max = max;
+  slider.value = min;
+  // Create a span element for the slider value
+  let sliderValue = document.createElement("span");
+  sliderValue.textContent = min;
+  // Add an event listener to the slider
+  slider.addEventListener("input", () => {
+    // Update the slider value text when the slider is changed
+    sliderValue.textContent = slider.value;
+  });
+  // Append the label element, the slider element, and the span element to the playlist container
+  playlistContainer.appendChild(sliderLabel);
+  playlistContainer.appendChild(slider);
+  playlistContainer.appendChild(sliderValue);
+  // Return the slider element
+  return slider;
+}
+
+function createButton(label) {
+  // Create a button element with a label
+  // Create a button element
+  let button = document.createElement("button");
+  button.textContent = label;
+  // Append the button element to the playlist container
+  playlistContainer.appendChild(button);
+  // Return the button element
+  return button;
+}
+
+function generatePlaylist() {
+  // Generate the playlist based on the activity and criteria
+  // Get the activity from the select box
+  let activity = activitySelect.value;
+  // Get the number of songs from the slider
+  let numberOfSongs = lengthSlider.value;
+  // Get the criteria from the criteria dictionary
+  let criteria = criteriaDict[activity];
+  // Get the user's top tracks as seeds
+  let seeds = topTracks.slice(0, 5).map(track => track.id).join(",");
+  // Get the playlist items based on the seeds and criteria
+  getPlaylistItems(seeds, criteria, numberOfSongs);
+}
+
+function getPlaylistItems(seeds, criteria, numberOfSongs) {
+  // Get the playlist items based on the seeds and criteria
+  // Construct the query parameters
+  let queryParams = new URLSearchParams({
+    limit: numberOfSongs,
+    seed_tracks: seeds,
+    ...criteria
+  });
+  // Fetch the playlist items from Spotify API
+  fetch(`${API_URL}/recommendations?${queryParams.toString()}`, {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Save the playlist items
+    playlistItems = data;
+    // Create a new playlist for the activity
+    createPlaylist(activity);
+  })
+  .catch(error => {
+    // Handle the error
+    console.error(error);
+  });
+}
+
+function createPlaylist(activity) {
+  // Create a new playlist for the activity
+  // Construct the playlist name
+  playlistName = `Kora - ${activity}`;
+  // Fetch the playlist id from Spotify API
+  fetch(`${API_URL}/users/${userProfile.id}/playlists`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: playlistName,
+      public: true
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Save the playlist id and link
+    playlistId = data.id;
+    playlistLink = data.external_urls.spotify;
+    // Get the playlist tracks as URIs
+    let playlistTracks = playlistItems.tracks.map(track => track.uri);
+    // Add the playlist tracks to the playlist
+    addPlaylistTracks(playlistId, playlistTracks);
+  })
+  .catch(error => {
+    // Handle the error
+    console.error(error);
+  });
+}
+
+function addPlaylistTracks(playlistId, playlistTracks) {
+  // Add the playlist tracks to the playlist
+  // Fetch the playlist snapshot id from Spotify API
+  fetch(`${API_URL}/playlists/${playlistId}/tracks`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      uris: playlistTracks
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Display the playlist name and link
+    displayPlaylistNameAndLink();
+    // Display the playlist tracks
+    displayPlaylistTracks();
+  })
+  .catch(error => {
+    // Handle the error
+    console.error(error);
+  });
+}
+
+function displayPlaylistNameAndLink() {
+  // Display the playlist name and link
+  // Create a heading element for the playlist name
+  let heading = document.createElement("h1");
+  heading.textContent = playlistName;
+  // Create an anchor element for the playlist link
+  let anchor = document.createElement("a");
+  anchor.href = playlistLink;
+  anchor.textContent = playlistLink;
+  // Append the heading element and the anchor element to the playlist link element
+  playlistLink.appendChild(heading);
+  playlistLink.appendChild(anchor);
+}
+
+function displayPlaylistTracks() {
+  // Display the playlist tracks
+  // Create a list element for the playlist tracks
+  let list = document.createElement("ul");
+  // Loop through the playlist tracks
+  for (let track of playlistItems.tracks) {
+    // Create a list item element for each track
+    let item = document.createElement("li");
+    // Get the track name, artists, and duration
+    let trackName = track.name;
+    let trackArtists = track.artists.map(artist => artist.name).join(", ");
+    let trackDuration = msToMMSS(track.duration_ms);
+    // Set the list item text as formatted string
+    item.textContent = `${trackName} by ${trackArtists} (${trackDuration})`;
+    // Create an audio element for the track preview
+    let audio = document.createElement("audio");
+    audio.src = track.preview_url;
+    audio.controls = true;
+    // Append the audio element to the list item element
+    item.appendChild(audio);
+    // Append the list item element to the list element
+    list.appendChild(item);
+  }
+  // Append the list element to the playlist container element
+  playlistContainer.appendChild(list);
+}
+
+// Define the main function
+function main() {
+  // Get the hash parameters from the url
+  let hashParams = getHashParams();
+  // Check if the access token is present
+  if (hashParams.access_token) {
+    // Save the access token
+    accessToken = hashParams.access_token;
+    // Hide the login button
+    loginButton.style.display = "none";
+    // Get the user profile from Spotify
+    getUserProfile();
+    // Get the user's top tracks from Spotify
+    getUserTopTracks();
+    // Create a select box for the activity
+    let activitySelect = createSelectBox("Select your activity", ["study", "workout", "running", "dancing", "cooking", "relaxing", "pop", "rock", "mindfulness", "wakeup", "LoFi", "R&B & chill", "Drum & Bass", "Indie", "Summer", "Jazz"]);
+    // Create a slider for the playlist length
+    let lengthSlider = createSlider("Select the number of songs", 1, 10);
+    // Create a button to generate the playlist
+    let generateButton = createButton("Generate Playlist");
+  } else {
+    // Show the login button
+    loginButton.style.display = "block";
+  }
+}
+
+// Define the criteria dictionary for each activity
+let criteriaDict = {
+  study: {
+    min_tempo: 60,
+    max_tempo: 120,
+    min_energy: 0.6,
+    max_energy: 0.9,
+    min_valence: 0.5,
+    max_valence: 0.8,
+    acousticness: 0.8, 
+    instrumentalness: 0.8, 
+    danceability: 0.2
+  },
+  workout: {
+    min_tempo: 120,
+    max_tempo: 180,
+    min_energy: 0.8,
+    max_energy: 1.0,
+    min_valence: 0.6,
+    max_valence: 1.0,
+    acousticness: 0.2, 
+    instrumentalness: 0.2, 
+    danceability: 0.8
+  },
+  running: {
+    min_tempo: 140,
+    max_tempo: 200,
+    min_energy: 0.7,
+    max_energy: 1.0,
+    min_valence: 0.4,
+    max_valence: 0.8,
+    acousticness: 0.3, 
+    instrumentalness: 0.3, 
+    danceability: 0.6
+  },
+  dancing: {
+    min_tempo: 100,
+    max_tempo: 160,
+    min_energy: 0.7,
+    max_energy: 1.0,
+    min_valence: 0.7,
+    max_valence: 1.0,
+    acousticness: 0.4, 
+    instrumentalness: 0.4, 
+    danceability: 0.9
+  },
+  cooking: {
+    min_tempo: 80,
+    max_tempo: 140,
+    min_energy: 0.5,
+    max_energy: 0.8,
+    min_valence: 0.5,
+    max_valence: 0.9,
+    acousticness: 0.6, 
+    instrumentalness: 0.6, 
+    danceability: 0.6
+  },
+  relaxing: {
+    min_tempo: 40,
+    max_tempo: 100,
+    min_energy: 0.1,
+    max_energy: 0.4,
+    min_valence: 0.1,
+    max_valence: 0.4,
+    acousticness: 0.9, 
+    instrumentalness: 0.9, 
+    danceability: 0.2
+  },
+  pop: {
+    seed_genres: "pop",
+    loudness: -6, // Pop songs are usually loud and clear
+    speechiness: 0.1, // Pop songs are usually not very speechy
+    liveness: 0.2, // Pop songs are usually not very live
+  },
+  rock: {
+    seed_genres: "rock",
+    loudness: -4, // Rock songs are usually very loud and distorted
+    speechiness: 0.05, // Rock songs are usually not speechy at all
+    liveness: 0.3, // Rock songs are usually somewhat live
+  },
+  mindfulness: {
+    seed_genres: "meditation",
+    loudness: -20, // Mindfulness songs are usually very quiet and soft
+    speechiness: 0.2, // Mindfulness songs may have some speech or vocals
+    liveness: 0.1, // Mindfulness songs are usually not live
+  },
+  wakeup: {
+    seed_genres: "morning",
+    loudness: -10, // Wakeup songs are usually not too loud or too quiet
+    speechiness: 0.15, // Wakeup songs may have some speech or vocals
+    liveness: 0.2, // Wakeup songs are usually not very live
+  },
+  LoFi: {
+    seed_genres: "lo-fi",
+    loudness: -12, // LoFi songs are usually quiet and muffled
+    speechiness: 0.1, // LoFi songs are usually not very speechy
+    liveness: 0.1, // LoFi songs are usually not live
+  },
+  "R&B & chill": {
+    seed_genres: "r-n-b, chill",
+    loudness: -8, // R&B & chill songs are usually moderately loud and smooth
+    speechiness: 0.2, // R&B & chill songs may have some speech or vocals
+    liveness: 0.2, // R&B & chill songs are usually not very live
+  },
+  "Drum & Bass": {
+    seed_genres: "drum-and-bass",
+    loudness: -6, // Drum & bass songs are usually loud and punchy
+    speechiness: 0.05, // Drum & bass songs are usually not speechy at all
+    liveness: 0.3, // Drum & bass songs are usually somewhat live
+  },
+  Indie: {
+    seed_genres: "indie",
+    loudness: -10, // Indie songs are usually not too loud or too quiet
+    speechiness: 0.15, // Indie songs may have some speech or vocals
+    liveness: 0.4, // Indie songs are usually more live
+  },
+  Summer: {
+    seed_genres: "summer",
+    loudness: -6, // Summer songs are usually loud and bright
+    speechiness: 0.2, // Summer songs may have some speech or vocals
+    liveness: 0.2, // Summer songs are usually not very live
+  },
+  Jazz: {
+    seed_genres: "jazz",
+    loudness: -12, // Jazz songs are usually quiet and mellow
+    speechiness: 0.1, // Jazz songs are usually not very speechy
+    liveness: 0.5, // Jazz songs are usually more live
+  }
+};
+
+// Call the main function
+main();
