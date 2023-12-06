@@ -20,8 +20,6 @@ const userProfileContainer = document.getElementById("user-profile"); // The use
 const avatar = document.getElementById("avatar"); // The avatar image element
 const displayName = document.getElementById("displayName"); // The display name span element
 const id = document.getElementById("id"); // The id span element
-const email = document.getElementById("email"); // The email span element
-const uri = document.getElementById("uri"); // The uri anchor element
 const topTracksContainer = document.getElementById("top-tracks-container"); // The top tracks container element
 const playlistButton = document.getElementById("playlist-button"); // The playlist button element
 const playlistContainer = document.getElementById("playlist-container"); // The playlist container element
@@ -80,11 +78,6 @@ function displayUserProfile() {
   displayName.textContent = userProfile.display_name;
   // Set the id text
   id.textContent = userProfile.id;
-  // Set the email text
-  email.textContent = userProfile.email;
-  // Set the uri href and text
-  uri.href = userProfile.uri;
-  uri.textContent = userProfile.uri;
   // Show the user profile container
   userProfileContainer.style.display = "block";
 }
