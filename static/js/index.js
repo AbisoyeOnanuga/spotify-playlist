@@ -9,7 +9,7 @@ let playlistLink; // The playlist link for the new playlist
 
 // Define the constants
 const CLIENT_ID = "07cf532190044f808358e604406e2bee"; // The client id for your Spotify app
-const REDIRECT_URI = "http://localhost"; // The redirect uri for your Spotify app
+const REDIRECT_URI = "https://dottymatrix.github.io/spotify-playlist/"; // The redirect uri for your Spotify app
 const SCOPES = "user-read-private user-read-email user-top-read playlist-modify-public"; // The scopes for Spotify authorization
 const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}`; // The authorization url for Spotify
 const API_URL = "https://api.spotify.com/v1"; // The base url for Spotify API
