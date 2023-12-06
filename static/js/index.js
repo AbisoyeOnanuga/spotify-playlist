@@ -50,26 +50,6 @@ function getHashParams() {
   return hashParams;
 }
 
-function getUserProfile() {
-  // Get the user profile from Spotify
-  fetch(`${API_URL}/me`, {
-    headers: {
-      "Authorization": `Bearer ${accessToken}`
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Save the user profile data
-    userProfile = data;
-    // Display the user profile data
-    displayUserProfile();
-  })
-  .catch(error => {
-    // Handle the error
-    console.error(error);
-  });
-}
-
 function displayUserProfile() {
   // Display the user profile data
   // Set the avatar image source
@@ -80,26 +60,6 @@ function displayUserProfile() {
   id.textContent = userProfile.id;
   // Show the user profile container
   userProfileContainer.style.display = "block";
-}
-
-function getUserTopTracks() {
-  // Get the user's top tracks from Spotify
-  fetch(`${API_URL}/me/top/tracks?limit=5`, {
-    headers: {
-      "Authorization": `Bearer ${accessToken}`
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Save the user's top tracks
-    topTracks = data.items;
-    // Display the user's top tracks
-    displayUserTopTracks();
-  })
-  .catch(error => {
-    // Handle the error
-    console.error(error);
-  });
 }
 
 function displayTopTracks() {
@@ -376,8 +336,8 @@ function displayPlaylistTracks() {
   playlistContainer.appendChild(list);
 }
 
-// Define the main function
-function main() {
+// Define the generatePlaylist function
+function generatePlaylist() {
   // Get the hash parameters from the url
   let hashParams = getHashParams();
   // Check if the access token is present
@@ -400,14 +360,13 @@ function main() {
     let body = document.body;
     // Create a div element
     let div = document.createElement("div");
-    // Append the select box to the div
     div.appendChild(activitySelect);
     // Append the slider to the div
     div.appendChild(lengthSlider);
     // Append the button to the div
     div.appendChild(generateButton);
     // Append the div to the body
-    body.insertBefore(div, topTracksContainer);
+    body.appendChild(div);
   } else {
     // Show the login button
     loginButton.style.display = "block";
