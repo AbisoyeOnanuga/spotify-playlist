@@ -126,3 +126,58 @@ col:nth-child(2) {
 col:nth-child(3) {
   width: 30%; /* Set the width of the third column to 30% */
 }
+
+/* Define the styles for the playlist generator elements */
+#playlist-generator {
+  margin-top: 20px;
+}
+
+#activity-select {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: large;
+  color: #2A2A2A;
+  background-color: #E5C48E;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#activity-select:hover {
+  color: #E5C48E;
+  background-color: #7B0B00;
+}
+
+#length-slider {
+  display: block;
+  margin: 0 auto;
+  width: 50%;
+}
+
+#length-value {
+  display: block;
+  margin: 0 auto;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: large;
+  color: #7B0B00;
+}
+
+#generate-button {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 21px;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: large;
+  color: #2A2A2A;
+  background-color: #E5C48E;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#generate-button:hover {
+  color: #E5C48E;
+  background-color: #7B0B00;
+}

@@ -23,10 +23,39 @@
                 <p><strong>ID:</strong> <span id="id"></span></p>
             </div>
         </div>
+        <!-- Add a div element to wrap the playlist generator elements -->
+        <div id="playlist-generator">
+          <h2>Generate a playlist based on your activity and top tracks</h2>
+          <!-- Add a select element for the activity -->
+          <label for="activity-select">Select your activity:</label>
+          <select id="activity-select">
+            <option value="study">study</option>
+            <option value="workout">workout</option>
+            <option value="running">running</option>
+            <option value="dancing">dancing</option>
+            <option value="cooking">cooking</option>
+            <option value="relaxing">relaxing</option>
+            <option value="pop">pop</option>
+            <option value="rock">rock</option>
+            <option value="mindfulness">mindfulness</option>
+            <option value="wakeup">wakeup</option>
+            <option value="LoFi">LoFi</option>
+            <option value="R&B & chill">R&B & chill</option>
+            <option value="Drum & Bass">Drum & Bass</option>
+            <option value="Indie">Indie</option>
+            <option value="Summer">Summer</option>
+            <option value="Jazz">Jazz</option>
+          </select>
+          <!-- Add a input element for the number of songs -->
+          <label for="length-slider">Select the number of songs:</label>
+          <input id="length-slider" type="range" min="1" max="10" value="5">
+          <span id="length-value">5</span>
+          <!-- Add a button element for generating the playlist -->
+          <button id="generate-button">Generate Playlist</button>
+        </div>
       </div>
     </div>
     <div id="top-tracks-container"></div>
-    <div id="playlist-button"></div>
     <div id="playlist-container"></div>
     <div id="playlist-link"></div>
     <div id="progress"></div>
