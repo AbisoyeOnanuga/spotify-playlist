@@ -354,8 +354,6 @@ function main() {
     let activitySelect = createSelectBox("Select your activity", ["study", "workout", "running", "dancing", "cooking", "relaxing", "pop", "rock", "mindfulness", "wakeup", "LoFi", "R&B & chill", "Drum & Bass", "Indie", "Summer", "Jazz"]);
     // Create a slider for the playlist length
     let lengthSlider = createSlider("Select the number of songs", 1, 10);
-    // Create a button to generate the playlist
-    let generateButton = createButton("Generate Playlist");
     // Get the body element
     let body = document.body;
     // Create a div element
