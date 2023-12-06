@@ -398,18 +398,24 @@ function main() {
     let generateButton = createButton("Generate Playlist");
     // Get the body element
     let body = document.body;
-    // Append the select box to the body
-    body.appendChild(activitySelect);
-    // Append the slider to the body
-    body.appendChild(lengthSlider);
-    // Append the button to the body
-    body.appendChild(generateButton);
+    // Create a div element
+    let div = document.createElement("div");
+    // Append the select box to the div
+    div.appendChild(activitySelect);
+    // Append the slider to the div
+    div.appendChild(lengthSlider);
+    // Append the button to the div
+    div.appendChild(generateButton);
+    // Append the div to the body
+    body.insertBefore(div, topTracksContainer);
   } else {
     // Show the login button
     loginButton.style.display = "block";
   }
 }
 
+// Add a click event listener to the button element
+generateButton.addEventListener("click", generatePlaylist);
 
 // Define the criteria dictionary for each activity
 let criteriaDict = {
