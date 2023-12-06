@@ -6,7 +6,6 @@ let playlistItems; // The playlist items based on the activity and criteria
 let playlistId; // The playlist id for the new playlist
 let playlistName; // The playlist name for the new playlist
 let playlistLink; // The playlist link for the new playlist
-let generateButton
 
 // Define the constants
 const CLIENT_ID = "07cf532190044f808358e604406e2bee"; // The client id for your Spotify app
@@ -27,8 +26,6 @@ const playlistContainer = document.getElementById("playlist-container"); // The 
 // Remove the let keyword from the playlistLink variable
 playlistLink = document.getElementById("playlist-link"); // The playlist link element
 const progress = document.getElementById("progress"); // The progress element
-
-return playlistContainer
 
 // Define the event listeners
 loginButton.addEventListener("click", () => {
@@ -53,6 +50,26 @@ function getHashParams() {
   return hashParams;
 }
 
+function getUserProfile() {
+  // Get the user profile from Spotify
+  fetch(`${API_URL}/me`, {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Save the user profile data
+    userProfile = data;
+    // Display the user profile data
+    displayUserProfile();
+  })
+  .catch(error => {
+    // Handle the error
+    console.error(error);
+  });
+}
+
 function displayUserProfile() {
   // Display the user profile data
   // Set the avatar image source
@@ -65,70 +82,50 @@ function displayUserProfile() {
   userProfileContainer.style.display = "block";
 }
 
-function displayTopTracks() {
-  // Display the user's top tracks from Spotify
-  // Fetch the user's top tracks from Spotify API
-  fetch(`${API_URL}/me/top/tracks?limit=5`, { // Change the limit parameter to 5
+function getUserTopTracks() {
+  // Get the user's top tracks from Spotify
+  fetch(`${API_URL}/me/top/tracks?limit=5`, {
     headers: {
       "Authorization": `Bearer ${accessToken}`
     }
   })
   .then(response => response.json())
   .then(data => {
-    // Save the top tracks data
-    topTracks = data;
-    // Create a table element for the top tracks
-    let table = document.createElement("table");
-    // Create a table head element for the table header
-    let thead = document.createElement("thead");
-    // Create a table row element for the header row
-    let tr = document.createElement("tr");
-    // Create table header cells for the header columns
-    let th1 = document.createElement("th");
-    th1.textContent = "#"; // Set the text content of the first header cell to "#"
-    let th2 = document.createElement("th");
-    th2.textContent = "Title"; // Set the text content of the second header cell to "Title"
-    let th3 = document.createElement("th");
-    th3.textContent = "Duration"; // Set the text content of the third header cell to "Duration"
-    // Append the header cells to the header row
-    tr.appendChild(th1);
-    tr.appendChild(th2);
-    tr.appendChild(th3);
-    // Append the header row to the table head
-    thead.appendChild(tr);
-    // Append the table head to the table
-    table.appendChild(thead);
-    // Create a table body element for the table body
-    let tbody = document.createElement("tbody");
-    // Loop through the top tracks
-    for (let i = 0; i < topTracks.items.length; i++) {
-      // Get the track object from the top tracks array
-      let track = topTracks.items[i];
-      // Create a table row element for each track
-      let tr = document.createElement("tr");
-      // Create table data cells for each track column
-      let td1 = document.createElement("td");
-      td1.textContent = i + 1; // Set the text content of the first data cell to the track number
-      let td2 = document.createElement("td");
-      td2.textContent = `${track.name} by ${track.artists.map(artist => artist.name).join(", ")}`; // Set the text content of the second data cell to the track name and artists
-      let td3 = document.createElement("td");
-      td3.textContent = msToMMSS(track.duration_ms); // Set the text content of the third data cell to the track duration
-      // Append the data cells to the data row
-      tr.appendChild(td1);
-      tr.appendChild(td2);
-      tr.appendChild(td3);
-      // Append the data row to the table body
-      tbody.appendChild(tr);
-    }
-    // Append the table body to the table
-    table.appendChild(tbody);
-    // Append the table element to the top tracks container element
-    topTracksContainer.appendChild(table);
+    // Save the user's top tracks
+    topTracks = data.items;
+    // Display the user's top tracks
+    displayUserTopTracks();
   })
   .catch(error => {
     // Handle the error
     console.error(error);
   });
+}
+
+function displayUserTopTracks() {
+  // Display the user's top tracks
+  // Create a heading element for the top tracks
+  let heading = document.createElement("h1");
+  heading.textContent = "Your Top Tracks";
+  // Append the heading element to the top tracks container
+  topTracksContainer.appendChild(heading);
+  // Create a list element for the top tracks
+  let list = document.createElement("ul");
+  // Loop through the top tracks
+  for (let track of topTracks) {
+    // Create a list item element for each track
+    let item = document.createElement("li");
+    // Get the track name, artists, and duration
+    let trackName = track.name;
+    let trackArtists = track.artists.map(artist => artist.name).join(", ");
+    let trackDuration = msToMMSS(track.duration_ms);
+    // Set the list item text as formatted string
+    item.textContent = `${trackName} by ${trackArtists} (${trackDuration})`;
+    // Append the list item element to the list element
+    list.appendChild(item);
+  }
+  // Append the list element to the top tracks container
+  topTracksContainer.appendChild(list);
 }
 
 function msToMMSS(ms) {
@@ -357,40 +354,22 @@ function main() {
     let activitySelect = createSelectBox("Select your activity", ["study", "workout", "running", "dancing", "cooking", "relaxing", "pop", "rock", "mindfulness", "wakeup", "LoFi", "R&B & chill", "Drum & Bass", "Indie", "Summer", "Jazz"]);
     // Create a slider for the playlist length
     let lengthSlider = createSlider("Select the number of songs", 1, 10);
+    // Create a button to generate the playlist
+    let generateButton = createButton("Generate Playlist");
     // Get the body element
     let body = document.body;
-    // Create a div element
-    let div = document.createElement("div");
-    div.appendChild(activitySelect);
-    // Append the slider to the div
-    div.appendChild(lengthSlider);
-    // Append the button to the div
-    div.appendChild(generateButton);
-    // Append the div to the body
-    body.appendChild(div);
-    // Create a button to generate the playlist
-    generateButton = createButton("Generate Playlist");
+      // Append the select box to the body
+    body.appendChild(activitySelect);
+    // Append the slider to the body
+    body.appendChild(lengthSlider);
+    // Append the button to the body
+    body.appendChild(generateButton);
   } else {
     // Show the login button
     loginButton.style.display = "block";
   }
 }
 
-// Define the generatePlaylist function
-function generatePlaylist() {
-  // Get the selected activity from the select box
-  let activity = activitySelect.value;
-  // Get the selected number of songs from the slider
-  let length = lengthSlider.value;
-  // Generate the playlist based on the activity and length
-  // Your code to generate the playlist
-}
-
-// Call the main function after the document is loaded
-window.onload = main;
-
-// Add a click event listener to the button element
-generateButton.addEventListener("click", generatePlaylist);
 
 // Define the criteria dictionary for each activity
 let criteriaDict = {
