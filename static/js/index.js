@@ -167,7 +167,7 @@ function displayTopTracks() {
 
 // Define a function to generate a playlist based on the activity, top tracks, and criteria
 function generatePlaylist() {
-  let activity = activitySelect.value;
+  let activity = document.getElementById("activity-select").value;
   let numberOfSongs = lengthSlider.value;
   let criteria = criteriaDict[activity];
   let seeds = topTracks.slice(0, 5).map(track => track.id).join(",");
