@@ -139,6 +139,7 @@ col:nth-child(2) {
 col:nth-child(3) {
   width: 30%; /* Set the width of the third column to 30% */
   padding: 10pt;
+  text-align: right;
 }
 
 /* Define the styles for the playlist generator elements */
