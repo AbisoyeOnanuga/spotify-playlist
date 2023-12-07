@@ -179,7 +179,7 @@ function getPlaylistItems(seeds, criteria, numberOfSongs) {
   let queryParams = new URLSearchParams({
     limit: numberOfSongs,
     seed_tracks: seeds,
-    ...criteria
+    ...criteriaDict
   });
   fetch(`${API_URL}/recommendations?${queryParams.toString()}`, {
     headers: {
@@ -264,10 +264,12 @@ function displayPlaylistTracks() {
     let trackArtists = track.artists.map(artist => artist.name).join(", ");
     let trackDuration = msToMMSS(track.duration_ms);
     item.textContent = `${trackName} by ${trackArtists} (${trackDuration})`;
-    let audio = document.createElement("audio");
-    audio.src = track.preview_url;
-    audio.controls = true;
-    item.appendChild(audio);
+    if (track.preview_url) {
+      let audio = document.createElement("audio");
+      audio.src = track.preview_url;
+      audio.controls = true;
+      item.appendChild(audio);
+    }
     list.appendChild(item);
   }
   playlistContainer.appendChild(list);
@@ -280,7 +282,7 @@ function main() {
     accessToken = hashParams.access_token;
     loginButton.style.display = "none";
     getUserProfile();
-    getUserTopTracks();
+    //getUserTopTracks();
     // Get the playlist generator elements by ID
     let activitySelect = document.getElementById("activity-select");
     let lengthSlider = document.getElementById("length-slider");
