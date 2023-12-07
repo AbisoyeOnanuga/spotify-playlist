@@ -83,14 +83,17 @@ h2 {
 
 /* Define a linear gradient background for the table */
 table {
-  background-image: linear-gradient(90deg, #e5c48e 25%, #a06039 75%);
+  background-image: linear-gradient(180deg, #E5C48E 10%, #A06039 90%);
   align-items: center;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: large;
+  color: #F2F2F2;
 }
 
 /* Define the table header styles */
 thead th {
-  background-color: rgba(255,255,255,0.5); /* Semi-transparent white */
-  color: black;
+  background-color: hsla(0, 0%, 100%, 0.5); /* Semi-transparent white */
+  color: #7B0B00;
   font-weight: bold;
   text-align: left;
 }
@@ -144,6 +147,13 @@ col:nth-child(3) {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.activity-select {
+  padding: 10px;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: large;
+  color: #2A2A2A;
 }
 
 #activity-select:hover {

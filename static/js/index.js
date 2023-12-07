@@ -107,7 +107,7 @@ function getUserTopTracks() {
 // Define a function to display the user's top tracks
 function displayTopTracks() {
   let topTracksContainer = document.getElementById("top-tracks-container");
-  let heading = document.createElement("h1");
+  let heading = document.createElement("h2");
   heading.textContent = "Your Top Tracks";
   let table = document.createElement("table");
   let thead = document.createElement("thead");
@@ -167,7 +167,7 @@ function displayTopTracks() {
 
 // Define a function to generate a playlist based on the activity, top tracks, and criteria
 function generatePlaylist() {
-  let activity = activitySelect.value;
+  let activity = document.getElementById("activity-select").value;
   let numberOfSongs = lengthSlider.value;
   let criteria = criteriaDict[activity];
   let seeds = topTracks.slice(0, 5).map(track => track.id).join(",");
