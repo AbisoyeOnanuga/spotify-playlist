@@ -82,6 +82,9 @@ h2 {
 }
 
 #top-tracks-container {
+  background-image: linear-gradient(180deg, #E5C48E 10%, #A06039 90%);
+  font-family: 'Titillium Web', sans-serif;
+  font-size: large;
   margin-left: auto;
   margin-right: auto;
   width: 80%;
@@ -90,8 +93,6 @@ h2 {
 /* Define a linear gradient background for the table */
 table {
   background-image: linear-gradient(180deg, #E5C48E 3%, #A06039 97%);
-  font-family: 'Titillium Web', sans-serif;
-  font-size: large;
   color: #F2F2F2;
 }
 
@@ -104,18 +105,16 @@ thead th {
 
 /* Define the table body styles */
 tbody tr {
-  border-bottom: 1px solid white; /* White border between rows */
+  border-bottom: 1px solid #F2F2F2; /* White border between rows */
 }
 
 tbody td {
-  color: white;
+  color: #F2F2F2;
 }
 
 /* Define the table footer styles */
 tfoot th {
   font-weight: bold;
-  font-family: 'Titillium Web', sans-serif;
-  font-size: large;
   color: #F2F2F2;
 }
 
