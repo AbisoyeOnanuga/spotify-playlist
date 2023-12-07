@@ -130,6 +130,7 @@ tfoot th {
 col:nth-child(1) {
   width: 10%; /* Set the width of the first column to 10% */
   padding: 10pt;
+  margin-left: 10pt;
 }
 
 col:nth-child(2) {
@@ -162,6 +163,7 @@ col:nth-child(3) {
 }
 
 .activity-select {
+  margin-top: 3%;
   padding: 10px;
   font-family: 'Titillium Web', sans-serif;
   font-size: large;
@@ -181,20 +183,37 @@ col:nth-child(3) {
   margin: 0 auto;
   appearance: none;
   width: 50%; /* Full-width */
-  height: 12px; /* Specified height */
+  height: 8px; /* Specified height */
   opacity: 0.8; /* Set transparency (for mouse-over effects on hover) */
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
 
 /* The progress value (Firefox) */
-.length-slider::-moz-progress-bar {
+#length-slider::-moz-progress-bar {
+  background: #A06039; /* Sunset color */
+}
+
+/* The progress value (Chrome, Safari, Opera) */
+#length-slider::-webkit-progress-value {
   background: #A06039; /* Sunset color */
 }
 
 /* Mouse-over effects */
 #length-slider:hover {
   opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider thumb (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+#length-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 15px; /* Slider handle height */
+  border-radius: 10px; /* Make it oval */
+  background: #1d1c25; /* Dark gray color */
+  border: 2px solid #E5C48E; /* Sunset color */
+  cursor: pointer; /* Cursor on hover */
 }
 
 #length-slider::-moz-range-thumb {
