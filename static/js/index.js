@@ -96,7 +96,7 @@ function getUserTopTracks() {
     // Save the user's top tracks
     topTracks = data.items;
     // Display the user's top tracks
-    //displayTopTracks();
+    displayTopTracks();
   })
   .catch(error => {
     // Handle the error
@@ -282,7 +282,7 @@ function main() {
     accessToken = hashParams.access_token;
     loginButton.style.display = "none";
     getUserProfile();
-    getUserTopTracks();
+    //getUserTopTracks();
     // Get the playlist generator elements by ID
     let activitySelect = document.getElementById("activity-select");
     let lengthSlider = document.getElementById("length-slider");
