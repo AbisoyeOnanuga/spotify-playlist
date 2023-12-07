@@ -179,7 +179,7 @@ col:nth-child(3) {
 #length-slider {
   -webkit-appearance: none; /* Override default CSS styles */
   display: block;
-  background: #8a8a8a;
+  background: #c4c4c4;
   margin: 0 auto;
   appearance: none;
   width: 50%; /* Full-width */
