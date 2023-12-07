@@ -179,7 +179,7 @@ function getPlaylistItems(seeds, criteria, numberOfSongs) {
   let queryParams = new URLSearchParams({
     limit: numberOfSongs,
     seed_tracks: seeds,
-    ...criteriaDict
+    ...criteria
   });
   fetch(`${API_URL}/recommendations?${queryParams.toString()}`, {
     headers: {
