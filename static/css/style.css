@@ -177,6 +177,7 @@ col:nth-child(3) {
 #length-slider {
   -webkit-appearance: none; /* Override default CSS styles */
   display: block;
+  background: #A06039;
   margin: 0 auto;
   appearance: none;
   width: 50%; /* Full-width */
@@ -195,7 +196,8 @@ col:nth-child(3) {
   width: 25px; /* Set a specific slider handle width */
   height: 15px; /* Slider handle height */
   border-radius: 10px; /* Make it oval */
-  background: #A06039; /* Barn red color */
+  background: #7B0B00; /* Barn red color */
+  border: 2px solid #E5C48E; /* Sunset color */
   cursor: pointer; /* Cursor on hover */
 }
 
