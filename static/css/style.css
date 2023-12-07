@@ -172,17 +172,13 @@ col:nth-child(3) {
   background-color: #7B0B00;
 }
 
-#length-slider {
-  display: block;
-  margin: 0 auto;
-  width: 50%;
-}
-
 /* The slider itself */
 #length-slider {
   -webkit-appearance: none; /* Override default CSS styles */
+  display: block;
+  margin: 0 auto;
   appearance: none;
-  width: 100%; /* Full-width */
+  width: 50%; /* Full-width */
   height: 25px; /* Specified height */
   background: linear-gradient(to right, #E5C48E, #A06039); /* Sunset color */
   outline: none; /* Remove outline */
@@ -194,17 +190,6 @@ col:nth-child(3) {
 /* Mouse-over effects */
 #length-slider:hover {
   opacity: 1; /* Fully shown on mouse-over */
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-#length-slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 15px; /* Slider handle height */
-  border-radius: 10px; /* Make it oval */
-  background: #A06039; /* Barn red color */
-  cursor: pointer; /* Cursor on hover */
 }
 
 #length-slider::-moz-range-thumb {
