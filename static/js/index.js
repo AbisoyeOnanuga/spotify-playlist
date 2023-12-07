@@ -96,7 +96,7 @@ function getUserTopTracks() {
     // Save the user's top tracks
     topTracks = data.items;
     // Display the user's top tracks
-    displayTopTracks();
+    //displayTopTracks();
   })
   .catch(error => {
     // Handle the error
