@@ -95,8 +95,6 @@ function getUserTopTracks() {
   .then(data => {
     // Save the user's top tracks
     topTracks = data.items;
-    // Display the user's top tracks
-    displayTopTracks();
   })
   .catch(error => {
     // Handle the error
@@ -167,7 +165,7 @@ function displayTopTracks() {
 
 // Define a function to generate a playlist based on the activity, top tracks, and criteria
 function generatePlaylist() {
-  let numberOfSongs = lengthSlider.value;
+  let numberOfSongs = this.lengthSlider.value;
   let criteria = criteriaDict[activity];
   let seeds = topTracks.slice(0, 5).map(track => track.id).join(",");
   getPlaylistItems(seeds, criteria, numberOfSongs);
