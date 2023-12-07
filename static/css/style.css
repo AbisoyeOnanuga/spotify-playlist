@@ -177,14 +177,19 @@ col:nth-child(3) {
 #length-slider {
   -webkit-appearance: none; /* Override default CSS styles */
   display: block;
-  background: #A06039;
+  background: #8a8a8a;
   margin: 0 auto;
   appearance: none;
   width: 50%; /* Full-width */
-  height: 25px; /* Specified height */
+  height: 12px; /* Specified height */
   opacity: 0.8; /* Set transparency (for mouse-over effects on hover) */
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
+}
+
+/* The progress value (Firefox) */
+.length-slider::-moz-progress-bar {
+  background: #A06039; /* Sunset color */
 }
 
 /* Mouse-over effects */
