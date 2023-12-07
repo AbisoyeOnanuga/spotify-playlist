@@ -2,7 +2,6 @@
 
 * {
   box-sizing: border-box;
-  margin: 5%;
   padding: 0;
 }
 
@@ -177,6 +176,44 @@ col:nth-child(3) {
   margin: 0 auto;
   width: 50%;
 }
+
+/* The slider itself */
+#length-slider {
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: linear-gradient(to right, #E5C48E, #A06039); /* Sunset color */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+#length-slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+#length-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 15px; /* Slider handle height */
+  border-radius: 10px; /* Make it oval */
+  background: #A06039; /* Barn red color */
+  cursor: pointer; /* Cursor on hover */
+}
+
+#length-slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 15px; /* Slider handle height */
+  border-radius: 10px; /* Make it oval */
+  background: #A06039; /* Barn red color */
+  cursor: pointer; /* Cursor on hover */
+}
+
 
 #length-value {
   display: block;
