@@ -97,48 +97,51 @@ h2 {
 }
 
 /* Define a linear gradient background for the table */
-table {
+#top-tracks-container table {
   background-image: linear-gradient(180deg, #E5C48E 10%, #A06039 90%);
   color: #F2F2F2;
   width: 100%;
   align-items: center;
+  margin-left: auto; /* Center the table horizontally */
+  margin-right: auto;
+  border-collapse: collapse; /* Collapse the borders of the table cells */
 }
 
 /* Define the table header styles */
-thead th {
+#top-tracks-container thead th {
   color: #7B0B00;
   font-weight: bold;
   text-align: left;
 }
 
 /* Define the table body styles */
-tbody tr {
+#top-tracks-container tbody tr {
   border-bottom: 1px solid #F2F2F2; /* White border between rows */
 }
 
-tbody td {
+#top-tracks-container tbody td {
   color: #F2F2F2;
 }
 
 /* Define the table footer styles */
-tfoot th {
+#top-tracks-container tfoot th {
   font-weight: bold;
   color: #F2F2F2;
 }
 
 /* Define the column styles */
-col:nth-child(1) {
+#top-tracks-container td:nth-child(1) {
   width: 10%; /* Set the width of the first column to 10% */
   padding: 10pt;
-  margin-left: 10pt;
+  margin-left: 3pt;
 }
 
-col:nth-child(2) {
+#top-tracks-container td:nth-child(2) {
   width: 60%; /* Set the width of the second column to 60% */
   padding: 10pt
 }
 
-col:nth-child(3) {
+#top-tracks-container td:nth-child(3) {
   width: 30%; /* Set the width of the third column to 30% */
   padding: 10pt;
   text-align: right;
@@ -177,6 +180,8 @@ col:nth-child(3) {
 
 /* The slider itself */
 #length-slider {
+  -moz-appearance: none;
+  appearance: none;
   -webkit-appearance: none; /* Override default CSS styles */
   display: block;
   background: #c4c4c4;
