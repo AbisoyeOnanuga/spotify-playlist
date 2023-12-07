@@ -299,10 +299,6 @@ function main() {
   }
 }
 
-// Run the main function when the window loads
-window.onload = main;
-
-
 // Define the criteria dictionary for each activity
 let criteriaDict = {
   study: {
@@ -433,5 +429,5 @@ let criteriaDict = {
   }
 };
 
-// Call the main function
-main();
+// Run the main function when the window loads
+window.onload = main;
