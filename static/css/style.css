@@ -194,16 +194,6 @@ h2 {
   transition: opacity .2s;
 }
 
-/* The progress value (Firefox) */
-#length-slider::-moz-progress-bar {
-  background: #A06039; /* Sunset color */
-}
-
-/* The progress value (Chrome, Safari, Opera) */
-#length-slider::-webkit-progress-value {
-  background: #A06039; /* Sunset color */
-}
-
 /* Mouse-over effects */
 #length-slider:hover {
   opacity: 1; /* Fully shown on mouse-over */
@@ -232,11 +222,13 @@ h2 {
 
 /* Style the track */
 #length-slider::-webkit-slider-runnable-track {
-  background: #A06039
+  background: #A06039 linear-gradient(to right, #c4c4c4 0%, #A06039 var(--value), #A06039 var(--value), #A06039 100%);
+  height: 8px; /* Specified height */
 }
 
 #length-slider::-moz-range-track {
-  background: #A06039
+  background: #A06039 linear-gradient(to right, #c4c4c4 0%, #A06039 var(--value), #A06039 var(--value), #A06039 100%);
+  height: 8px; /* Specified height */
 }
 
 
