@@ -171,7 +171,7 @@ function generatePlaylist() {
   let numberOfSongs = document.getElementById("length-slider").value;
   let criteria = criteriaDict[activity];
   let seeds = topTracks.slice(0, 5).map(track => track.id).join(",");
-  getPlaylistItems(seeds, criteria, numberOfSongs);
+  getPlaylistItems(activity, seeds, criteria, numberOfSongs);
 }
 
 // Define a function to get the playlist items from the Spotify API
