@@ -175,7 +175,7 @@ function generatePlaylist() {
 }
 
 // Define a function to get the playlist items from the Spotify API
-function getPlaylistItems(seeds, criteria, numberOfSongs) {
+function getPlaylistItems(activity, seeds, criteria, numberOfSongs) {
   let queryParams = new URLSearchParams({
     limit: numberOfSongs,
     seed_tracks: seeds,
