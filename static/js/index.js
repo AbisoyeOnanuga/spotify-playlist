@@ -251,6 +251,8 @@ function displayPlaylistNameAndLink() {
   let anchor = document.createElement("a");
   anchor.href = playlistLink;
   anchor.textContent = playlistLink;
+  // Use a different variable name for the element
+  let playlistLinkElement = document.getElementById("playlist-link");
   playlistLink.appendChild(heading);
   playlistLink.appendChild(anchor);
 }
